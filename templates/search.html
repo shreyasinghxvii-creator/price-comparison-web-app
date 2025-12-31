@@ -1,0 +1,347 @@
+
+{% extends "base.html" %}
+
+{% block title %}Market Intelligence Dashboard - Compario{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+
+<!-- Search Hero -->
+<div class="search-hero py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="search-badge mb-3">
+                    <i class="bi bi-graph-up-arrow me-2"></i>Live Market Intelligence
+                </div>
+                <h1 class="display-5 fw-bold mb-4">Real-Time Price Discovery</h1>
+                <p class="lead mb-4">Advanced AI-powered search across 50+ platforms with instant competitive analysis and market insights.</p>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stat-item">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value">{{ total_searches or 0 }}</div>
+                                <div class="stat-label">Total Searches</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stat-item">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                                <i class="bi bi-shop"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value">{{ platforms_scanned or 4 }}</div>
+                                <div class="stat-label">Platforms Scanned</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stat-item">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                                <i class="bi bi-currency-rupee"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value">₹{{ avg_savings or '2,450' }}</div>
+                                <div class="stat-label">Avg. Savings</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="stat-item">
+                            <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                                <i class="bi bi-heart-fill"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value">{{ wishlist_count or 0 }}</div>
+                                <div class="stat-label">Wishlist Items</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="search-visual">
+                    <div class="search-mockup">
+                        <div class="mockup-header">
+                            <div class="mockup-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span>Market Search</span>
+                        </div>
+                        <div class="mockup-content">
+                            <div class="search-bar-demo"></div>
+                            <div class="results-demo">
+                                <div class="result-item"></div>
+                                <div class="result-item"></div>
+                                <div class="result-item"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container page-content">
+    <div class="search-container" id="product-search" data-aos="zoom-in">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Advanced Product Search</h2>
+            <p class="text-muted">AI-powered market intelligence with real-time competitive analysis</p>
+        </div>
+        
+        <ul class="nav nav-pills justify-content-center" id="searchTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="text-search-tab" data-bs-toggle="tab" data-bs-target="#text-search" type="button" role="tab" aria-controls="text-search" aria-selected="true">
+                    <i class="bi bi-keyboard me-1"></i> Text Search
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="image-search-tab" data-bs-toggle="tab" data-bs-target="#image-search" type="button" role="tab" aria-controls="image-search" aria-selected="false">
+                    <i class="bi bi-camera me-1"></i> Image Search
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="searchTabContent">
+            <div class="tab-pane fade show active" id="text-search" role="tabpanel" aria-labelledby="text-search-tab">
+                <form id="searchForm" class="mt-4">
+                    <label for="productName" class="form-label fs-5">What are you looking for?</label>
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control" id="productName"
+                               placeholder="e.g., iPhone 15, Samsung S24 Ultra" required value="{{ query or '' }}">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="image-search" role="tabpanel" aria-labelledby="image-search-tab">
+                <form id="imageSearchForm" class="mt-4">
+                    <div class="advanced-upload-zone" id="uploadZone">
+                        <div class="upload-content">
+                            <div class="upload-icon">
+                                <i class="bi bi-cloud-upload"></i>
+                            </div>
+                            <h5 class="upload-title">Drop image here or click to browse</h5>
+                            <p class="upload-subtitle">Supports JPG, PNG, WebP up to 10MB</p>
+                            <div class="upload-options">
+                                <button type="button" class="btn btn-outline-primary me-2" onclick="document.getElementById('productImage').click()">
+                                    <i class="bi bi-folder2-open me-2"></i>Browse Files
+                                </button>
+                                <button type="button" class="btn btn-outline-success" onclick="openCamera()">
+                                    <i class="bi bi-camera me-2"></i>Take Photo
+                                </button>
+                            </div>
+                            <input type="file" id="productImage" accept="image/*" style="display: none;" required>
+                        </div>
+                        <div class="upload-preview" id="uploadPreview" style="display: none;">
+                            <img id="previewImage" src="" alt="Preview">
+                            <div class="preview-info">
+                                <h6 id="fileName"></h6>
+                                <p id="fileSize"></p>
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearUpload()">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-success btn-lg" id="scanButton" disabled>
+                            <i class="bi bi-search me-2"></i>Analyze Image
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="search-suggestions text-center mt-4">
+            {% if recommendations %}
+            <div class="mb-2">
+                <small class="text-muted me-2">Trending:</small>
+                {% for item in recommendations %}
+                    <span class="badge rounded-pill bg-primary suggestion-badge" onclick="quickSearch('{{ item }}')">{{ item }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% if recent_searches %}
+            <div>
+                <small class="text-muted me-2">Recent:</small>
+                {% for item in recent_searches %}
+                     <span class="badge rounded-pill bg-secondary suggestion-badge" onclick="quickSearch('{{ item }}')">{{ item }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="results-section">
+        <div id="loading" class="loading-container py-5" style="display:none;">
+            <div class="text-center mb-5">
+                <div class="spinner-border text-primary mb-3" role="status"></div>
+                <h4 class="fw-bold">Searching across stores...</h4>
+                <p class="text-muted">AI agents are fetching live prices from Amazon, Flipkart, Croma & Snapdeal.</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4"><div class="skeleton skeleton-card p-3"><div class="skeleton skeleton-text" style="height: 200px; margin-bottom: 20px;"></div><div class="skeleton skeleton-text" style="width: 60%;"></div><div class="skeleton skeleton-text" style="width: 90%;"></div><div class="skeleton skeleton-text" style="width: 40%; height: 30px; margin-top: 20px;"></div></div></div>
+                <div class="col-lg-3 col-md-6 mb-4"><div class="skeleton skeleton-card p-3"><div class="skeleton skeleton-text" style="height: 200px; margin-bottom: 20px;"></div><div class="skeleton skeleton-text" style="width: 60%;"></div><div class="skeleton skeleton-text" style="width: 90%;"></div><div class="skeleton skeleton-text" style="width: 40%; height: 30px; margin-top: 20px;"></div></div></div>
+                <div class="col-lg-3 col-md-6 mb-4"><div class="skeleton skeleton-card p-3"><div class="skeleton skeleton-text" style="height: 200px; margin-bottom: 20px;"></div><div class="skeleton skeleton-text" style="width: 60%;"></div><div class="skeleton skeleton-text" style="width: 90%;"></div><div class="skeleton skeleton-text" style="width: 40%; height: 30px; margin-top: 20px;"></div></div></div>
+                <div class="col-lg-3 col-md-6 mb-4"><div class="skeleton skeleton-card p-3"><div class="skeleton skeleton-text" style="height: 200px; margin-bottom: 20px;"></div><div class="skeleton skeleton-text" style="width: 60%;"></div><div class="skeleton skeleton-text" style="width: 90%;"></div><div class="skeleton skeleton-text" style="width: 40%; height: 30px; margin-top: 20px;"></div></div></div>
+            </div>
+        </div>
+        <div id="results"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
+<script>
+// Advanced Upload Zone Functionality
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('productImage');
+const uploadContent = document.querySelector('.upload-content');
+const uploadPreview = document.getElementById('uploadPreview');
+const previewImage = document.getElementById('previewImage');
+const fileName = document.getElementById('fileName');
+const fileSize = document.getElementById('fileSize');
+const scanButton = document.getElementById('scanButton');
+
+// Drag and Drop Events
+uploadZone.addEventListener('dragover', handleDragOver);
+uploadZone.addEventListener('dragleave', handleDragLeave);
+uploadZone.addEventListener('drop', handleDrop);
+uploadZone.addEventListener('click', () => fileInput.click());
+
+// File Input Change
+fileInput.addEventListener('change', handleFileSelect);
+
+function handleDragOver(e) {
+    e.preventDefault();
+    uploadZone.classList.add('drag-over');
+}
+
+function handleDragLeave(e) {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    uploadZone.classList.remove('drag-over');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        handleFile(files[0]);
+    }
+}
+
+function handleFileSelect(e) {
+    if (e.target.files.length > 0) {
+        handleFile(e.target.files[0]);
+    }
+}
+
+function handleFile(file) {
+    if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file');
+        return;
+    }
+    
+    if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        previewImage.src = e.target.result;
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        
+        uploadContent.style.display = 'none';
+        uploadPreview.style.display = 'flex';
+        scanButton.disabled = false;
+    };
+    reader.readAsDataURL(file);
+}
+
+function clearUpload() {
+    fileInput.value = '';
+    uploadContent.style.display = 'block';
+    uploadPreview.style.display = 'none';
+    scanButton.disabled = true;
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function openCamera() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.capture = 'camera';
+    input.onchange = function(e) {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    };
+    input.click();
+}
+
+// Image Search Form Handler
+document.getElementById('imageSearchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    if (!fileInput.files || !fileInput.files[0]) {
+        alert('Please select an image first');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+    
+    scanButton.disabled = true;
+    scanButton.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Processing...';
+    
+    fetch('/upload-image', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('productName').value = data.product_name;
+            document.getElementById('text-search-tab').click();
+            alert('Product detected: ' + data.product_name);
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Upload failed: ' + error.message);
+    })
+    .finally(() => {
+        scanButton.disabled = false;
+        scanButton.innerHTML = '<i class="bi bi-search me-2"></i>Analyze Image';
+    });
+});
+
+// Auto-search if query parameter is provided
+{% if query %}
+document.addEventListener('DOMContentLoaded', function() {
+    performSearch('{{ query }}');
+});
+{% endif %}
+</script>
+{% endblock %}

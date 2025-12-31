@@ -1,0 +1,254 @@
+
+{% extends "base.html" %}
+
+{% block title %}Platform - Compario{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/platform.css') }}">
+<!-- Platform Hero -->
+<div class="platform-hero py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="hero-badge mb-3">
+                    <i class="bi bi-award-fill me-2"></i>Enterprise-Grade Platform
+                </div>
+                <h1 class="display-4 fw-bold mb-4">Next-Generation Price Intelligence</h1>
+                <p class="lead mb-4">Harness the power of AI-driven market analytics to make smarter purchasing decisions and maximize your savings across all major e-commerce platforms.</p>
+                <div class="hero-stats row g-3 mb-4">
+                    <div class="col-4">
+                        <div class="stat-box text-center">
+                            <div class="stat-number">50M+</div>
+                            <div class="stat-label">Products Tracked</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-box text-center">
+                            <div class="stat-number">₹2.4Cr</div>
+                            <div class="stat-label">Savings Generated</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-box text-center">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Uptime</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <a href="{{ url_for('analytics') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="bi bi-graph-up-arrow me-2"></i>Start Analytics
+                    </a>
+                    <a href="#demo" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-play-circle me-2"></i>Watch Demo
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+                <div class="hero-visual">
+                    <div class="floating-card card-1">
+                        <i class="bi bi-lightning-charge-fill"></i>
+                        <span>Real-time Scanning</span>
+                    </div>
+                    <div class="floating-card card-2">
+                        <i class="bi bi-graph-up"></i>
+                        <span>Price Analytics</span>
+                    </div>
+                    <div class="floating-card card-3">
+                        <i class="bi bi-bell-fill"></i>
+                        <span>Smart Alerts</span>
+                    </div>
+                    <div class="hero-dashboard">
+                        <div class="dashboard-header">
+                            <div class="dashboard-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span>Compario</span>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="chart-placeholder"></div>
+                            <div class="metrics-row">
+                                <div class="metric">
+                                    <div class="metric-value">₹45,999</div>
+                                    <div class="metric-label">Best Price</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="metric-value">15%</div>
+                                    <div class="metric-label">Savings</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section id="features" class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="section-badge mb-3" data-aos="fade-up">
+                <i class="bi bi-stars me-2"></i>Platform Features
+            </div>
+            <h2 class="fw-bold display-5 mb-3" data-aos="fade-up" data-aos-delay="100">Advanced Shopping Intelligence</h2>
+            <p class="text-muted lead" data-aos="fade-up" data-aos-delay="200">Powered by cutting-edge AI and machine learning algorithms</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+                            <div class="feature-glow"></div>
+                        </div>
+                        <div class="feature-badge">Live Data</div>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Real-Time Scraping</h4>
+                        <p>Advanced web crawlers fetch live prices from 50+ platforms every second. No stale data, guaranteed fresh results.</p>
+                        <div class="feature-stats">
+                            <span class="stat"><i class="bi bi-clock"></i> <1s response</span>
+                            <span class="stat"><i class="bi bi-check-circle"></i> 99.9% accuracy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon"><i class="bi bi-bell-fill"></i></div>
+                            <div class="feature-glow"></div>
+                        </div>
+                        <div class="feature-badge">Smart Alerts</div>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Intelligent Price Alerts</h4>
+                        <p>AI-powered notifications with predictive analytics. Get alerted before prices drop, not after.</p>
+                        <div class="feature-stats">
+                            <span class="stat"><i class="bi bi-graph-down"></i> 15% avg savings</span>
+                            <span class="stat"><i class="bi bi-lightning"></i> Instant alerts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                            <div class="feature-glow"></div>
+                        </div>
+                        <div class="feature-badge">Analytics</div>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Market Intelligence</h4>
+                        <p>Deep learning algorithms analyze 6 months of price history to predict optimal buying times.</p>
+                        <div class="feature-stats">
+                            <span class="stat"><i class="bi bi-cpu"></i> AI-powered</span>
+                            <span class="stat"><i class="bi bi-calendar"></i> 180-day history</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon"><i class="bi bi-camera-fill"></i></div>
+                            <div class="feature-glow"></div>
+                        </div>
+                        <div class="feature-badge">Computer Vision</div>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Visual Product Search</h4>
+                        <p>Advanced OCR and image recognition technology identifies products from photos with 95% accuracy.</p>
+                        <div class="feature-stats">
+                            <span class="stat"><i class="bi bi-eye"></i> 95% accuracy</span>
+                            <span class="stat"><i class="bi bi-upload"></i> Multi-format</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="700">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon"><i class="bi bi-heart-fill"></i></div>
+                            <div class="feature-glow"></div>
+                        </div>
+                        <div class="feature-badge">Tracking</div>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Smart Wishlist</h4>
+                        <p>Intelligent tracking with price prediction models and personalized recommendations based on your preferences.</p>
+                        <div class="feature-stats">
+                            <span class="stat"><i class="bi bi-bookmark"></i> Unlimited items</span>
+                            <span class="stat"><i class="bi bi-graph-up"></i> Trend analysis</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="800">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon-wrapper">
+                            <div class="feature-icon"><i class="bi bi-robot"></i></div>
+                            <div class="feature-glow"></div>
+                        </div>
+                        <div class="feature-badge">AI Assistant</div>
+                    </div>
+                    <div class="feature-content">
+                        <h4>Conversational AI</h4>
+                        <p>GPT-powered shopping assistant provides personalized recommendations and instant product searches via natural language.</p>
+                        <div class="feature-stats">
+                            <span class="stat"><i class="bi bi-chat-dots"></i> 24/7 available</span>
+                            <span class="stat"><i class="bi bi-brain"></i> GPT-powered</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="how-it-works" class="section-padding bg-alt">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-6" data-aos="fade-up">How It Works</h2>
+            <p class="text-muted" data-aos="fade-up" data-aos-delay="100">Start saving in 4 simple steps</p>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4" data-aos="fade-right" data-aos-delay="200">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <h5 class="mt-4">Search</h5>
+                    <p class="small">Enter product name or upload an image.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4" data-aos="fade-right" data-aos-delay="300">
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <h5 class="mt-4">Compare</h5>
+                    <p class="small">View prices from all top stores side-by-side.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4" data-aos="fade-left" data-aos-delay="400">
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <h5 class="mt-4">Track</h5>
+                    <p class="small">Add to wishlist to monitor price history.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4" data-aos="fade-left" data-aos-delay="500">
+                <div class="step-card">
+                    <div class="step-number">04</div>
+                    <h5 class="mt-4">Save</h5>
+                    <p class="small">Buy when the price drops to your target.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

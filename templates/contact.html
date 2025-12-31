@@ -1,0 +1,284 @@
+
+{% extends "base.html" %}
+
+{% block title %}Support Center - Compario{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/support.css') }}">
+
+<!-- Support Hero -->
+<div class="support-hero py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="support-badge mb-3">
+                    <i class="bi bi-headset me-2"></i>24/7 Support Center
+                </div>
+                <h1 class="display-4 fw-bold mb-4">We're Here to Help</h1>
+                <p class="lead mb-4">Get instant support, browse our knowledge base, or connect with our expert team for personalized assistance.</p>
+                
+                <div class="support-stats row g-3 mb-4">
+                    <div class="col-4">
+                        <div class="stat-card">
+                            <div class="stat-number"><2min</div>
+                            <div class="stat-label">Avg Response</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-card">
+                            <div class="stat-number">98%</div>
+                            <div class="stat-label">Satisfaction</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-card">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Available</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="support-channels">
+                    <div class="channel-card">
+                        <i class="bi bi-chat-dots-fill"></i>
+                        <h5>Live Chat</h5>
+                        <p>Instant support via chat</p>
+                        <span class="status online">Online</span>
+                    </div>
+                    <div class="channel-card">
+                        <i class="bi bi-envelope-fill"></i>
+                        <h5>Email Support</h5>
+                        <p>Detailed assistance via email</p>
+                        <span class="status">support@compario.com</span>
+                    </div>
+                    <div class="channel-card">
+                        <i class="bi bi-telephone-fill"></i>
+                        <h5>Phone Support</h5>
+                        <p>Direct phone assistance</p>
+                        <span class="status">+91 99999 99999</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Quick Actions -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5" data-aos="fade-up">How Can We Help?</h2>
+            <p class="text-muted lead" data-aos="fade-up" data-aos-delay="100">Choose the best way to get support</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="help-card">
+                    <div class="help-icon">
+                        <i class="bi bi-book-fill"></i>
+                    </div>
+                    <h4>Knowledge Base</h4>
+                    <p>Browse our comprehensive guides and tutorials</p>
+                    <a href="#faq" class="btn btn-outline-primary">Browse Articles</a>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="help-card">
+                    <div class="help-icon">
+                        <i class="bi bi-chat-square-dots-fill"></i>
+                    </div>
+                    <h4>Live Chat</h4>
+                    <p>Get instant help from our support team</p>
+                    <button class="btn btn-primary" onclick="toggleChat()">Start Chat</button>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="help-card">
+                    <div class="help-icon">
+                        <i class="bi bi-ticket-detailed-fill"></i>
+                    </div>
+                    <h4>Submit Ticket</h4>
+                    <p>Create a support ticket for detailed assistance</p>
+                    <a href="#contact" class="btn btn-outline-primary">Create Ticket</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form -->
+<section id="contact" class="section-padding bg-alt">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="support-form-card" data-aos="zoom-in-up">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold">Submit Support Ticket</h3>
+                        <p class="text-muted">Describe your issue and we'll get back to you within 2 hours</p>
+                    </div>
+                    
+                    <form id="supportForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Full Name</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Email Address</label>
+                                <input type="email" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Priority Level</label>
+                                <select class="form-select" required>
+                                    <option value="">Select Priority</option>
+                                    <option value="low">Low - General Question</option>
+                                    <option value="medium">Medium - Feature Request</option>
+                                    <option value="high">High - Bug Report</option>
+                                    <option value="urgent">Urgent - Service Down</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Category</label>
+                                <select class="form-select" required>
+                                    <option value="">Select Category</option>
+                                    <option value="technical">Technical Issue</option>
+                                    <option value="billing">Billing & Account</option>
+                                    <option value="feature">Feature Request</option>
+                                    <option value="general">General Inquiry</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Subject</label>
+                                <input type="text" class="form-control" placeholder="Brief description of your issue" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Message</label>
+                                <textarea class="form-control" rows="5" placeholder="Please provide detailed information about your issue..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="bi bi-send-fill me-2"></i>Submit Ticket
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section-padding bg-alt">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-6" data-aos="fade-up">Frequently Asked Questions</h2>
+            <p class="text-muted" data-aos="fade-up" data-aos-delay="100">Find answers to common questions about our service</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion" data-aos="fade-up" data-aos-delay="200">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq1">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                                How accurate are the prices shown?
+                            </button>
+                        </h2>
+                        <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Our prices are fetched in real-time from the official websites, ensuring 99%+ accuracy. Prices are updated every time you search.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq2">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                                Which platforms do you support?
+                            </button>
+                        </h2>
+                        <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We currently support Amazon, Flipkart, Croma, and Snapdeal. We're constantly adding more platforms based on user requests.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq3">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                                Is the service free to use?
+                            </button>
+                        </h2>
+                        <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! Our basic price comparison service is completely free. Premium features like advanced alerts and analytics may be introduced in the future.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="faq4">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                                How do price alerts work?
+                            </button>
+                        </h2>
+                        <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Add items to your wishlist and set a target price. We'll check prices regularly and notify you via email when the price drops to your target.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('supportForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const btn = this.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Submitting...';
+    
+    setTimeout(() => {
+        showAlert('Support ticket submitted successfully! We\'ll respond within 2 hours.', 'success');
+        this.reset();
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-send-fill me-2"></i>Submit Ticket';
+    }, 1500);
+});
+
+function showAlert(message, type) {
+    const alertContainer = document.getElementById('alert-container');
+    if (!alertContainer) return;
+    
+    const alertTypes = {
+        success: 'alert-success',
+        error: 'alert-danger',
+        warning: 'alert-warning',
+        info: 'alert-info'
+    };
+    
+    const alert = document.createElement('div');
+    alert.className = `alert ${alertTypes[type]} alert-dismissible fade show`;
+    alert.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    alertContainer.appendChild(alert);
+    
+    setTimeout(() => {
+        if (alert.parentNode) {
+            alert.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endblock %}

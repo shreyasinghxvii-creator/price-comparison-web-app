@@ -1,0 +1,608 @@
+
+{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard - Compario{% endblock %}
+
+{% block content %}
+<!-- Analytics Header -->
+<div class="analytics-header py-5" data-aos="fade-down">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <div class="header-icon" data-aos="zoom-in" data-aos-delay="200">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+            </div>
+            <div class="col">
+                <h1 class="mb-2 fw-bold" data-aos="fade-right" data-aos-delay="300">Analytics Dashboard</h1>
+                <p class="text-muted mb-0" data-aos="fade-right" data-aos-delay="400">
+                    Real-time market intelligence and price analytics across multiple platforms
+                </p>
+            </div>
+            <div class="col-auto">
+                <div class="d-flex gap-2" data-aos="fade-left" data-aos-delay="500">
+                    <button class="btn btn-outline-primary" onclick="exportData()">
+                        <i class="bi bi-download me-2"></i>Export Data
+                    </button>
+                    <button class="btn btn-primary" onclick="refreshAnalytics()">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Bar -->
+<div class="stats-bar" data-aos="fade-up" data-aos-delay="600">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item" data-aos="zoom-in" data-aos-delay="700">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalSearches">{{ total_searches or 0 }}</div>
+                        <div class="stat-label">Total Searches</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item" data-aos="zoom-in" data-aos-delay="800">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                        <i class="bi bi-shop"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="platformsScanned">{{ platforms_scanned or 4 }}</div>
+                        <div class="stat-label">Platforms Scanned</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item" data-aos="zoom-in" data-aos-delay="900">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="bi bi-currency-rupee"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="avgSavings">₹{{ avg_savings or '2,450' }}</div>
+                        <div class="stat-label">Avg. Savings</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item" data-aos="zoom-in" data-aos-delay="1000">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                        <i class="bi bi-heart-fill"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="wishlistItems">{{ wishlist_count or 0 }}</div>
+                        <div class="stat-label">Wishlist Items</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Analytics Content -->
+<div class="container py-5">
+    <!-- Search Analytics Panel -->
+    <div class="search-panel" data-aos="fade-up" data-aos-delay="200">
+        <div class="panel-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h2 class="panel-title">
+                        <i class="bi bi-bar-chart-line me-3 text-primary"></i>
+                        Market Intelligence
+                    </h2>
+                    <p class="panel-subtitle">Advanced price comparison and market analysis tools</p>
+                </div>
+                <div class="col-auto">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-secondary btn-sm active" data-period="7d">7D</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-period="30d">30D</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-period="90d">90D</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Tabs -->
+        <div class="search-tabs">
+            <ul class="nav nav-tabs" id="searchTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="quick-search-tab" data-bs-toggle="tab" data-bs-target="#quick-search" type="button" role="tab">
+                        <i class="bi bi-lightning-fill me-2"></i>Quick Search
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="image-search-tab" data-bs-toggle="tab" data-bs-target="#image-search" type="button" role="tab">
+                        <i class="bi bi-camera-fill me-2"></i>Image Search
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="searchTabContent">
+            <!-- Quick Search Tab -->
+            <div class="tab-pane fade show active" id="quick-search" role="tabpanel">
+                <div class="search-form-container">
+                    <form id="analyticsSearchForm">
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label for="productName" class="form-label fw-semibold">Product Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" id="productName" placeholder="Enter product name (e.g., iPhone 15, Samsung TV)" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="priceRange" class="form-label fw-semibold">Price Range</label>
+                                <select class="form-select" id="priceRange">
+                                    <option value="">All Prices</option>
+                                    <option value="0-10000">Under ₹10,000</option>
+                                    <option value="10000-50000">₹10,000 - ₹50,000</option>
+                                    <option value="50000-100000">₹50,000 - ₹1,00,000</option>
+                                    <option value="100000+">Above ₹1,00,000</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Platforms to Scan</label>
+                                <div class="platform-checkboxes">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="amazon" id="amazon" checked>
+                                        <label class="form-check-label" for="amazon">
+                                            <i class="bi bi-shop text-warning me-1"></i>Amazon
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="flipkart" id="flipkart" checked>
+                                        <label class="form-check-label" for="flipkart">
+                                            <i class="bi bi-bag text-primary me-1"></i>Flipkart
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="croma" id="croma" checked>
+                                        <label class="form-check-label" for="croma">
+                                            <i class="bi bi-tv text-danger me-1"></i>Croma
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="snapdeal" id="snapdeal" checked>
+                                        <label class="form-check-label" for="snapdeal">
+                                            <i class="bi bi-lightning text-success me-1"></i>Snapdeal
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="bi bi-graph-up-arrow me-2"></i>
+                                    <span class="btn-text">Analyze Market</span>
+                                    <div class="spinner-border spinner-border-sm ms-2 d-none" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Image Search Tab -->
+            <div class="tab-pane fade" id="image-search" role="tabpanel">
+                <div class="image-upload-area">
+                    <form id="imageSearchForm" enctype="multipart/form-data">
+                        <div class="upload-zone" onclick="document.getElementById('imageInput').click()">
+                            <i class="bi bi-cloud-upload display-4 text-muted mb-3"></i>
+                            <h5 class="fw-bold">Upload Product Image</h5>
+                            <p class="text-muted">Drag and drop an image or click to browse</p>
+                            <small class="text-muted">Supports JPG, PNG, WebP up to 10MB</small>
+                            <input type="file" id="imageInput" name="image" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button type="submit" class="btn btn-primary" disabled style="opacity: 0.5;">
+                                <i class="bi bi-search me-2"></i>Search by Image
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestions Panel -->
+        <div class="suggestions-panel">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h6 class="fw-bold mb-2"><i class="bi bi-lightbulb me-2 text-warning"></i>Trending Searches</h6>
+                    <div class="suggestion-tags">
+                        <span class="suggestion-tag trending" onclick="searchSuggestion('iPhone 15')">iPhone 15</span>
+                        <span class="suggestion-tag trending" onclick="searchSuggestion('Samsung S24 Ultra')">Samsung S24 Ultra</span>
+                        <span class="suggestion-tag trending" onclick="searchSuggestion('MacBook Air M3')">MacBook Air M3</span>
+                        <span class="suggestion-tag trending" onclick="searchSuggestion('Sony WH-1000XM5')">Sony WH-1000XM5</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="fw-bold mb-2"><i class="bi bi-clock-history me-2 text-info"></i>Recent Searches</h6>
+                    <div class="suggestion-tags">
+                        {% for search in recent_searches[:4] %}
+                        <span class="suggestion-tag recent" onclick="searchSuggestion('{{ search }}')">{{ search }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="mt-4" style="display: none;">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-container text-center py-5">
+            <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h5 class="fw-bold">Analyzing Market Data</h5>
+            <p class="text-muted">Scanning multiple platforms for the best deals...</p>
+            <div class="progress mx-auto" style="width: 300px; height: 8px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Results Content -->
+        <div id="resultsContent" style="display: none;">
+            <!-- Results will be populated here -->
+        </div>
+    </div>
+
+    <!-- Analytics Charts Section -->
+    <div class="row mt-5">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm" data-aos="fade-up" data-aos-delay="300">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-graph-up me-2 text-primary"></i>Price Trends Analysis
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="priceChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm" data-aos="fade-up" data-aos-delay="400">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-pie-chart me-2 text-success"></i>Platform Distribution
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="platformChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Insights -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm" data-aos="fade-up" data-aos-delay="500">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-lightbulb me-2 text-warning"></i>Market Insights & Recommendations
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                            <div class="insight-card p-3 border rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="insight-icon bg-success bg-opacity-10 text-success rounded-circle p-2 me-3">
+                                        <i class="bi bi-arrow-down-circle-fill"></i>
+                                    </div>
+                                    <h6 class="mb-0 fw-bold">Best Time to Buy</h6>
+                                </div>
+                                <p class="text-muted small mb-2">Electronics prices typically drop 15-20% during festive seasons</p>
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-success bg-opacity-20 text-success">15-20% Off</span>
+                                    <small class="text-muted ms-2">Next: Diwali Sale</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                            <div class="insight-card p-3 border rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="insight-icon bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
+                                        <i class="bi bi-trophy-fill"></i>
+                                    </div>
+                                    <h6 class="mb-0 fw-bold">Top Platform</h6>
+                                </div>
+                                <p class="text-muted small mb-2">Amazon offers competitive prices for 68% of searched products</p>
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-primary bg-opacity-20 text-primary">68% Win Rate</span>
+                                    <small class="text-muted ms-2">vs competitors</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                            <div class="insight-card p-3 border rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="insight-icon bg-warning bg-opacity-10 text-warning rounded-circle p-2 me-3">
+                                        <i class="bi bi-bell-fill"></i>
+                                    </div>
+                                    <h6 class="mb-0 fw-bold">Smart Alerts</h6>
+                                </div>
+                                <p class="text-muted small mb-2">Set alerts for 5-10% price drops to maximize savings</p>
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-warning bg-opacity-20 text-warning">₹2,450 Avg</span>
+                                    <small class="text-muted ms-2">savings per alert</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+
+<script>
+// Suppress all external script errors
+window.addEventListener('error', function(e) {
+    e.preventDefault();
+    return false;
+});
+window.addEventListener('unhandledrejection', function(e) {
+    e.preventDefault();
+});
+
+// Initialize AOS if available
+if (typeof AOS !== 'undefined') {
+    AOS.init({
+        duration: 800,
+        easing: 'ease-out-cubic',
+        once: true
+    });
+}
+
+// Analytics Search Form Handler
+document.getElementById('analyticsSearchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const productName = document.getElementById('productName').value;
+    const priceRange = document.getElementById('priceRange').value;
+    
+    // Get selected platforms
+    const platforms = [];
+    document.querySelectorAll('.platform-checkboxes input[type="checkbox"]:checked').forEach(cb => {
+        platforms.push(cb.value);
+    });
+    
+    if (!productName.trim()) {
+        alert('Please enter a product name');
+        return;
+    }
+    
+    if (platforms.length === 0) {
+        alert('Please select at least one platform');
+        return;
+    }
+    
+    // Show loading state
+    showLoadingState();
+    
+    // Simulate API call
+    setTimeout(() => {
+        // Redirect to search page with parameters
+        const params = new URLSearchParams({
+            q: productName,
+            platforms: platforms.join(','),
+            price_range: priceRange
+        });
+        window.location.href = `/search?${params.toString()}`;
+    }, 2000);
+});
+
+function showLoadingState() {
+    document.getElementById('resultsSection').style.display = 'block';
+    document.getElementById('loadingState').style.display = 'block';
+    document.getElementById('resultsContent').style.display = 'none';
+    
+    // Animate progress bar
+    const progressBar = document.querySelector('.progress-bar');
+    let width = 0;
+    const interval = setInterval(() => {
+        width += Math.random() * 15;
+        if (width >= 100) {
+            width = 100;
+            clearInterval(interval);
+        }
+        progressBar.style.width = width + '%';
+    }, 200);
+    
+    // Update button state
+    const btn = document.querySelector('#analyticsSearchForm button[type="submit"]');
+    btn.disabled = true;
+    btn.querySelector('.btn-text').textContent = 'Analyzing...';
+    btn.querySelector('.spinner-border').classList.remove('d-none');
+}
+
+function searchSuggestion(query) {
+    document.getElementById('productName').value = query;
+    document.getElementById('quick-search-tab').click();
+}
+
+// Wait for DOM to load for image handlers
+setTimeout(() => {
+    const imageForm = document.getElementById('imageSearchForm');
+    if (imageForm) {
+        imageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('imageInput');
+            if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+                alert('Please select an image first');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+            
+            const btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Processing...';
+            
+            fetch('/upload-image', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('productName').value = data.product_name;
+                    document.getElementById('quick-search-tab').click();
+                    alert('Product detected: ' + data.product_name);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Upload failed: ' + error.message);
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-search me-2"></i>Search by Image';
+            });
+        });
+    }
+    
+    const imageInput = document.getElementById('imageInput');
+    if (imageInput) {
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const uploadZone = this.closest('.upload-zone');
+                uploadZone.innerHTML = `
+                    <i class="bi bi-check-circle display-4 text-success mb-3"></i>
+                    <h6>Image Selected</h6>
+                    <p class="text-muted">${this.files[0].name}</p>
+                `;
+                
+                // Enable submit button
+                const submitBtn = document.querySelector('#imageSearchForm button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                }
+            }
+        });
+    }
+}, 100);
+
+function exportData() {
+    // Export functionality
+    console.log('Exporting analytics data...');
+}
+
+function refreshAnalytics() {
+    // Refresh analytics data
+    console.log('Refreshing analytics...');
+    location.reload();
+}
+
+// Initialize Charts
+setTimeout(() => {
+    // Price Trends Chart
+    const priceCtx = document.getElementById('priceChart');
+    if (priceCtx) {
+        // Destroy existing chart if it exists
+        const existingChart = Chart.getChart(priceCtx);
+        if (existingChart) {
+            existingChart.destroy();
+        }
+        new Chart(priceCtx.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Average Price',
+                data: [45000, 42000, 44000, 41000, 43000, 40000],
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        callback: function(value) {
+                            return '₹' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+        });
+    }
+    
+    // Platform Distribution Chart
+    const platformCtx = document.getElementById('platformChart');
+    if (platformCtx) {
+        // Destroy existing chart if it exists
+        const existingPlatformChart = Chart.getChart(platformCtx);
+        if (existingPlatformChart) {
+            existingPlatformChart.destroy();
+        }
+        new Chart(platformCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Amazon', 'Flipkart', 'Croma', 'Snapdeal'],
+                datasets: [{
+                    data: [35, 28, 22, 15],
+                    backgroundColor: ['#ff9500', '#047bd6', '#e42529', '#e60012'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+}, 200);
+
+// Period selector functionality
+document.querySelectorAll('[data-period]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('[data-period]').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        const period = this.dataset.period;
+        console.log('Selected period:', period);
+        // Update charts based on selected period
+    });
+});
+</script>
+{% endblock %}

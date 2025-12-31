@@ -1,0 +1,65 @@
+├── app.py                 # Main Flask application
+├── requirements.txt       # Python dependencies
+├── .env.example          # Environment variables template
+├── scraper/              # Web scraping modules
+│   ├── base_scraper.py   # Base scraper class
+│   ├── amazon_scraper.py # Amazon-specific scraper
+│   ├── flipkart_scraper.py # Flipkart-specific scraper
+│   ├── croma_scraper.py  # Croma-specific scraper
+│   ├── snapdeal_scraper.py # Snapdeal-specific scraper
+│   └── scraper_manager.py # Multi-platform manager
+├── utils/                # Utility modules
+│   ├── currency_converter.py # Currency conversion
+│   └── product_matcher.py    # Product matching algorithms
+├── templates/            # HTML templates
+├── static/               # CSS, JS, images
+└── instance/             # Database files
+
+
+
+
+
+compario /
+├── app.py
+├── requirements.txt
+├── .env.example
+├── scraper/
+│   ├── base_scraper.py
+│   ├── amazon_scraper.py
+│   ├── flipkart_scraper.py
+│   ├── croma_scraper.py
+│   ├── snapdeal_scraper.py
+│   └── scraper_manager.py
+├── utils/
+│   ├── currency_converter.py
+│   └── product_matcher.py
+├── templates/
+│   ├── about.html
+│   ├── analytics.html
+│   ├── auth_base.html
+│   ├── base.html
+│   ├── contact.html
+│   ├── features.html
+│   ├── history.html
+│   ├── home.html
+│   ├── login.html
+│   ├── register.html
+│   ├── search.html
+│   ├── wishlist_backup.html
+│   └── wishlist.html
+├── static/
+│   ├── css/
+│   │   ├── enterprise.css
+│   │   ├── home.css
+│   │   ├── platform.css
+│   │   ├── search.css
+│   │   ├── style.css
+│   │   └── support.css
+│   └── js/
+│       ├── analytics.js 
+│       ├── main.js
+│       └── search.js
+├── ocr_processor.py
+├── Project Structure.txt
+├── README.md
+└── requirements.txt  

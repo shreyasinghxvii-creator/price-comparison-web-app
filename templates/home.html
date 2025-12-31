@@ -1,0 +1,111 @@
+
+{% extends "base.html" %}
+
+{% block title %}Compario - Smart Price Comparison{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<div class="hero-section-image" id="home">
+    <div class="hero-slideshow" id="hero-slider">
+        <div class="hero-bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=1920');"></div>
+        <div class="hero-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=1920');"></div>
+        <div class="hero-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=1920');"></div>
+        <div class="hero-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=1920');"></div>
+    </div>
+    
+    <div class="hero-overlay"></div>
+
+    <div class="container">
+        <h1 class="display-3 mb-4 fw-bold" data-aos="fade-down">Enterprise Price Intelligence Platform</h1>
+        <p class="lead mb-5 fs-4" data-aos="fade-up" data-aos-delay="200">Advanced market analytics and competitive intelligence for data-driven business decisions across global e-commerce platforms.</p>
+        
+        <div class="row g-3 justify-content-center" data-aos="zoom-in" data-aos-delay="400">
+            {% for stat in hero_stats %}
+            <div class="col-6 col-md-3">
+                <div class="hero-stat-box" style="background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 16px;">
+                    <div class="hero-stat-icon" style="background: linear-gradient(135deg, {{ stat.colors[0] }}, {{ stat.colors[1] }}); border-radius: 12px; width: 50px; height: 50px;"><i class="bi {{ stat.icon }}"></i></div>
+                    <h3 class="hero-stat-value fw-bold">{{ stat.value }}</h3>
+                    <p class="hero-stat-label">{{ stat.label }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-5" data-aos="fade-up" data-aos-delay="600">
+            <a href="{{ url_for('search_page') }}" class="btn btn-primary btn-lg px-5 py-3 me-3" style="border-radius: 8px; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); border: none; box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);">
+                <i class="bi bi-graph-up me-2"></i>Launch Analytics Dashboard
+            </a>
+            <a href="{{ url_for('features_page') }}" class="btn btn-outline-light btn-lg px-5 py-3" style="border-radius: 8px; border: 2px solid rgba(255,255,255,0.8); backdrop-filter: blur(10px);">
+                <i class="bi bi-gear me-2"></i>Platform Features
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Start Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h6 class="text-primary fw-bold text-uppercase mb-3" data-aos="fade-up" style="letter-spacing: 2px;">MARKET INTELLIGENCE</h6>
+            <h2 class="fw-bold display-5 mb-4" data-aos="fade-up" data-aos-delay="100">Strategic Market Categories</h2>
+            <p class="text-muted lead mb-5" data-aos="fade-up" data-aos-delay="200">Access real-time competitive intelligence and comprehensive market analytics for strategic business insights</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for item in recommendations %}
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="card h-100 border-0 shadow-sm" style="transition: all 0.3s ease; border-radius: 12px;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.05)'">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3" style="width: 60px; height: 60px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            <i class="bi bi-briefcase text-white fs-4"></i>
+                        </div>
+                        <h6 class="card-title fw-bold mb-2">{{ item }}</h6>
+                        <a href="{{ url_for('search_page', q=item) }}" class="btn btn-primary btn-sm px-3" style="border-radius: 6px;">Analyze Market</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if recent_searches %}
+        <div class="mt-5" data-aos="fade-up" data-aos-delay="500">
+            <div class="card border-0 shadow-sm recent-searches-card" style="border-radius: 16px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #6366f1, #4f46e5); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);">
+                            <i class="bi bi-clock-history text-white fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-bold">Recent Market Analysis</h5>
+                            <p class="text-muted small mb-0">Continue your market research</p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for search in recent_searches %}
+                        <a href="{{ url_for('search_page', q=search) }}" class="btn btn-outline-primary btn-sm search-tag" style="border-radius: 25px; padding: 0.5rem 1rem; transition: all 0.3s ease; position: relative; overflow: hidden;">
+                            <i class="bi bi-graph-up me-1"></i>{{ search }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Hero slideshow
+const slides = document.querySelectorAll('.hero-bg-slide');
+let currentSlide = 0;
+if (slides.length > 0) {
+    setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }, 5000);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,217 @@
+
+/* Enterprise Page Styles */
+
+.enterprise-hero {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+}
+
+[data-theme="dark"] .enterprise-hero {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+}
+
+.enterprise-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: white;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.enterprise-features {
+    margin: 1.5rem 0;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+    color: #475569;
+}
+
+[data-theme="dark"] .feature-item {
+    color: #cbd5e1;
+}
+
+.enterprise-stat {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .enterprise-stat {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.enterprise-stat:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-number {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #3b82f6;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.5rem;
+}
+
+.enterprise-visual {
+    position: relative;
+    height: 400px;
+}
+
+.api-mockup {
+    background: #1e293b;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.code-header {
+    background: #334155;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.code-title {
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+.code-content {
+    padding: 1.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+}
+
+.code-line {
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+}
+
+.code-line.response {
+    color: #10b981;
+}
+
+.floating-metrics {
+    position: absolute;
+}
+
+.metric-card {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    animation: slideIn 2s ease-out, float 3s ease-in-out infinite;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    width: 220px;
+}
+
+.metric-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .metric-card {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-card:first-child {
+    position: absolute;
+    top: 20px;
+    left: 100px;
+    animation-delay: 0.5s;
+    z-index: 10;
+}
+
+.metric-card:last-child {
+    position: absolute;
+    bottom: 40px;
+    left: 100px;
+    animation-delay: 1s;
+    z-index: 10;
+}
+
+.metric-card i {
+    font-size: 1.25rem;
+    color: #3b82f6;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+    50% { transform: translate(-50%, -50%) translateY(-10px); }
+}
+
+@keyframes slideIn {
+    0% { opacity: 0; transform: translateX(-20px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .enterprise-visual {
+        height: 300px;
+    }
+    
+    .api-mockup {
+        width: 280px;
+    }
+    
+    .metric-card:first-child {
+        right: -60px;
+    }
+    
+    .metric-card:last-child {
+        left: -80px;
+    }
+}

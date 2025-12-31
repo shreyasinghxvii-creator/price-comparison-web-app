@@ -1,0 +1,160 @@
+
+{% extends "base.html" %}
+
+{% block title %}Enterprise Solutions - Compario{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/enterprise.css') }}">
+<section class="enterprise-hero py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="enterprise-badge mb-3">
+                    <i class="bi bi-building me-2"></i>Enterprise Solutions
+                </div>
+                <h1 class="display-4 fw-bold mb-4">Scale Your Business Intelligence</h1>
+                <p class="lead mb-4">Enterprise-grade price monitoring and competitive intelligence platform designed for businesses that need real-time market insights at scale.</p>
+                
+                <div class="enterprise-features mb-4">
+                    <div class="feature-item">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <span>API Access with 99.9% Uptime SLA</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <span>Custom Data Pipelines & Integrations</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <span>Dedicated Account Management</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <span>White-label Solutions Available</span>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="enterprise-stat">
+                            <div class="stat-number">50M+</div>
+                            <div class="stat-label">Products Monitored</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="enterprise-stat">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Enterprise Clients</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="enterprise-stat">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">API Uptime</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="enterprise-stat">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Support</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="enterprise-actions">
+                    <a href="{{ url_for('contact_page') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="bi bi-calendar-check me-2"></i>Schedule Demo
+                    </a>
+                    <a href="#pricing" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-graph-up me-2"></i>View Pricing
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
+                <div class="enterprise-visual">
+                    <div class="api-mockup">
+                        <div class="code-header">
+                            <span class="code-title">Enterprise API</span>
+                            <div class="status-indicator"></div>
+                        </div>
+                        <div class="code-content">
+                            <div class="code-line">GET /api/v2/enterprise/products</div>
+                            <div class="code-line">Authorization: Bearer {API_KEY}</div>
+                            <div class="code-line response">Status: 200 OK</div>
+                            <div class="code-line response">Response Time: 45ms</div>
+                        </div>
+                    </div>
+                    <div class="floating-metrics">
+                        <div class="metric-card">
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Real-time Data</span>
+                        </div>
+                        <div class="metric-card">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Enterprise Security</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5" data-aos="fade-up">Enterprise Solutions</h2>
+            <p class="text-muted lead" data-aos="fade-up" data-aos-delay="100">Comprehensive price intelligence for modern businesses</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-center p-4 bg-white rounded shadow-sm h-100">
+                    <i class="bi bi-shield-check text-primary fs-1 mb-3"></i>
+                    <h5>Transparency</h5>
+                    <p class="text-muted">We believe in complete price transparency. Our real-time data ensures you always see accurate pricing information.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-center p-4 bg-white rounded shadow-sm h-100">
+                    <i class="bi bi-piggy-bank text-primary fs-1 mb-3"></i>
+                    <h5>Savings</h5>
+                    <p class="text-muted">Our platform helps you save money by finding the best deals and alerting you to price drops on your favorite products.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="text-center p-4 bg-white rounded shadow-sm h-100">
+                    <i class="bi bi-clock text-primary fs-1 mb-3"></i>
+                    <h5>Convenience</h5>
+                    <p class="text-muted">Save time by comparing prices from multiple platforms in one place. No more switching between tabs and apps.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h4 class="fw-bold mb-3">About the Developer</h4>
+                <p class="text-muted">
+                    Compario was designed and developed by 
+                    <strong>Shreya</strong> as a full-stack learning and portfolio project.
+                    The application demonstrates practical use of Python, Flask,
+                    web scraping, and modern frontend design principles.
+                </p>
+                <p class="text-muted small mb-0">
+                    Originally developed as part of an academic internship and later refined
+                    for professional portfolio presentation.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

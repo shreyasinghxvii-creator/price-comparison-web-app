@@ -1,0 +1,556 @@
+
+{% extends "base.html" %}
+
+{% block title %}My Wishlist - PriceScraper Pro{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+        /* --- Light/Dark Mode CSS Variables --- */
+        :root {
+            /* Light Mode Defaults */
+            --body-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --navbar-bg: #ffffff;
+            --navbar-text: #495057;
+            --primary-color: #0d6efd;
+            --border-color: #dee2e6;
+            --footer-bg: #e9ecef;
+            --footer-text: #6c757d;
+            --glass-border: 1px solid var(--border-color);
+            --backdrop-filter: none;
+            --input-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            /* --- Dark Mode Gradient Background --- */
+            --body-bg: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            
+            /* --- Glassmorphism Variables --- */
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-color: #e2e8f0;
+            
+            /* Semi-transparent Navbar */
+            --navbar-bg: rgba(15, 23, 42, 0.85);
+            --navbar-text: rgba(255, 255, 255, 0.8);
+            
+            --primary-color: #0d6efd;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --footer-bg: #0f172a;
+            --footer-text: rgba(255, 255, 255, 0.7);
+            
+            /* Glass Border & Blur */
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --backdrop-filter: blur(20px);
+            --input-bg: rgba(255, 255, 255, 0.05);
+        }
+        /* --- End Variables --- */
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            color: #212529;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        [data-theme="dark"] body {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        /* Navbar */
+        .navbar {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: var(--navbar-bg) !important;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+            backdrop-filter: var(--backdrop-filter);
+        }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text-color) !important;
+        }
+        .navbar-brand i {
+            color: var(--primary-color);
+        }
+        .nav-link {
+            font-weight: 500;
+            color: var(--navbar-text) !important;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
+
+        /* Fix dropdown z-index to ensure it appears above page content */
+        .navbar .dropdown-menu {
+            z-index: 1050 !important;
+        }
+        
+        /* Theme Toggle Button */
+        #theme-toggle-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--navbar-text);
+            padding: 0.25rem 0.5rem;
+        }
+        #theme-toggle-btn:hover {
+            color: var(--primary-color);
+        }
+        [data-theme="dark"] .bi-sun-fill { display: inline-block; }
+        [data-theme="dark"] .bi-moon-stars-fill { display: none; }
+        :root .bi-sun-fill { display: none; }
+        :root .bi-moon-stars-fill { display: inline-block; }
+        
+        /* Main Content Card - Solid styling */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            border: 1px solid #dee2e6;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            flex-grow: 1;
+        }
+        .main-container h1 {
+            color: #212529;
+        }
+        [data-theme="dark"] .main-container {
+            background: #1a202c;
+            border-color: #4a5568;
+        }
+        [data-theme="dark"] .main-container h1 {
+            color: #e2e8f0;
+        }
+
+        .alert-warning {
+            background-color: rgba(255, 243, 205, 0.9);
+            border-color: #ffc107;
+            color: #664d03;
+            font-weight: 500;
+        }
+        
+        /* Form Controls */
+        .form-control {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+        .form-control:focus {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .form-control::placeholder {
+            color: rgba(128, 128, 128, 0.7);
+        }
+
+        /* Product Card - Solid backgrounds for visibility */
+        .product-card {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+        }
+        
+        /* Solid dark mode cards for visibility */
+        [data-theme="dark"] .product-card {
+            background: #2d3748;
+            border: 1px solid #4a5568;
+            color: #e2e8f0;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+        .product-image-container {
+            height: 200px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white; /* Keep image bg white for better visibility */
+            border-radius: 10px 10px 0 0;
+        }
+        .product-image {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+        .product-info {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #212529;
+            height: 3.2em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 10px;
+            line-height: 1.6em;
+        }
+        .product-name-link {
+            font-weight: 500;
+            color: #212529;
+            text-decoration: none;
+        }
+        .product-name-link:hover {
+            text-decoration: underline;
+            color: #0d6efd;
+        }
+        
+        /* Dark mode text colors */
+        [data-theme="dark"] .product-title {
+            color: #e2e8f0;
+        }
+        [data-theme="dark"] .product-name-link {
+            color: #e2e8f0;
+        }
+        [data-theme="dark"] .product-name-link:hover {
+            color: #60a5fa;
+        }
+        .product-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .price-alert-form {
+             margin-top: auto;
+             padding-top: 15px;
+        }
+        
+        .footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .footer a {
+             color: var(--footer-text) !important;
+             text-decoration: none;
+        }
+        .footer a:hover {
+             color: var(--primary-color) !important;
+        }
+        
+        /* Modal Content */
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: var(--glass-border);
+            backdrop-filter: var(--backdrop-filter);
+        }
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-footer {
+            border-top: 1px solid var(--border-color);
+        }
+        .btn-close {
+            /* Invert close button color in dark mode */
+            filter: var(--text-color) == #e2e8f0 ? invert(1) : none;
+        }
+        [data-theme="dark"] .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+    </style>
+
+<div class="container">
+        <div class="main-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-5">My Wishlist (Price Tracker)</h1>
+                <a href="/" class="btn btn-primary"><i class="bi bi-search"></i> Search New Products</a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'success' if category == 'success' else 'warning' }} alert-dismissible fade show" role="alert">
+                            <i class="bi bi-bell-fill me-2"></i> {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            
+            <!-- Template Debug: items={{ items|length if items else 'None' }}, type={{ items.__class__.__name__ if items else 'None' }} -->
+            {% if not items %}
+                <div class="text-center p-5">
+                    <div class="mb-4">
+                        <i class="bi bi-heart" style="font-size: 4rem; color: #6c757d; opacity: 0.5;"></i>
+                    </div>
+                    <h4>Your wishlist is empty!</h4>
+                    <p class="text-muted mb-4">Start searching for products and click "❤️ Track" to add them to your wishlist.</p>
+                    <a href="{{ url_for('search_page') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-search me-2"></i>Start Shopping
+                    </a>
+                </div>
+            {% else %}
+                <div class="row">
+                    {% for item in items %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="product-card"
+                            
+                            <span class="badge bg-{{ item.badge_color }} position-absolute top-0 end-0 m-2" style="font-size: 0.75rem;">
+                                {{ item.deal_status }}
+                            </span>
+
+                            <div class="product-image-container">
+                                <img src="{{ item.image_url or 'https://via.placeholder.com/200x200?text=No+Image' }}"
+                                     alt="{{ item.product_name }}"
+                                     class="product-image"
+                                     onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'">
+                            </div>
+                            
+                            <div class="product-info">
+                                <span class="badge bg-dark mb-2">{{ item.website }}</span>
+                                <h5 class="product-title" title="{{ item.product_name }}">
+                                    <a href="{{ item.product_url }}" target="_blank" class="product-name-link">
+                                        {{ item.product_name }}
+                                    </a>
+                                </h5>
+                                
+                                <h4 class="text-success mb-1">₹{{ item.current_price }}</h4>
+                                
+                                {% if item.avg_price %}
+                                <small class="text-muted mb-3">30-Day Avg: ₹{{ item.avg_price }}</small>
+                                {% else %}
+                                <small class="text-muted mb-3">Tracking price...</small>
+                                {% endif %}
+
+
+                                <div class="price-alert-form">
+                                    <form action="{{ url_for('set_target_price', item_id=item.id) }}" method="POST" class="d-flex mb-3">
+                                        <input type="number" name="target_price" class="form-control form-control-sm" 
+                                               style="width: 130px;" 
+                                               placeholder="{{ 'Alert: ₹' ~ (item.target_price or '...') }}"
+                                               step="100" min="0">
+                                        <button type="submit" class="btn btn-primary btn-sm ms-2">Set</button>
+                                    </form>
+                                    
+                                    <div class="product-buttons">
+                                        <button class="btn btn-outline-info btn-sm" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#historyModal"
+                                                data-item-id="{{ item.id }}"
+                                                data-name="{{ item.product_name }}">
+                                            <i class="bi bi-graph-up"></i> History
+                                        </button>
+                                        
+                                        <form action="{{ url_for('remove_from_wishlist', item_id=item.id) }}" method="POST" onsubmit="return confirm('Are you sure?');" class="d-inline">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historyModalLabel">Price History</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 id="modal-product-name" class="text-center text-muted mb-3">Loading...</h6>
+                    
+                    <div id="chart-container" style="position: relative; height:300px; width:100%; display: none;">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                    
+                    <div id="chart-loading" class="text-center p-5">
+                         <div class="spinner-border text-primary" role="status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="text-center p-4 mt-auto footer">
+        <!-- Footer content removed -->
+    </footer>
+
+    <script>
+        // Force dropdown initialization after page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait a bit for all scripts to load
+            setTimeout(function() {
+                var dropdownElementList = [].slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
+                dropdownElementList.forEach(function(dropdownToggleEl) {
+                    if (!dropdownToggleEl.hasAttribute('data-dropdown-initialized')) {
+                        dropdownToggleEl.setAttribute('data-dropdown-initialized', 'true');
+                        new bootstrap.Dropdown(dropdownToggleEl);
+                        console.log('Dropdown initialized on wishlist page');
+                    }
+                });
+            }, 100);
+        });
+    </script>
+    
+    <script>
+        // --- Dark Mode Toggle Script ---
+        function setupThemeToggle() {
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            if (!themeToggleBtn) return; 
+
+            const applyTheme = (theme) => {
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                
+                // Update chart colors if chart exists (Optional polish)
+                if (myPriceChart) {
+                    // We could re-render the chart here with different grid colors for dark mode
+                    // For now, standard grid works ok
+                }
+            };
+
+            const getPreferredTheme = () => {
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) return savedTheme;
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            };
+
+            const currentTheme = getPreferredTheme();
+            applyTheme(currentTheme);
+
+            themeToggleBtn.addEventListener('click', () => {
+                const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+            });
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    applyTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        }
+        
+        // --- NEW: Chart Logic ---
+        let myPriceChart = null;
+
+        var historyModal = document.getElementById('historyModal');
+        historyModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var itemId = button.getAttribute('data-item-id');
+            
+            var modalProductName = historyModal.querySelector('#modal-product-name');
+            var chartLoading = historyModal.querySelector('#chart-loading');
+            var chartContainer = historyModal.querySelector('#chart-container');
+            
+            // Reset State
+            modalProductName.textContent = "Loading...";
+            chartLoading.style.display = 'block';
+            chartContainer.style.display = 'none';
+
+            // Fetch Data from our new API
+            fetch(`/api/price_history/${itemId}`)
+            .then(response => response.json())
+            .then(data => {
+                chartLoading.style.display = 'none';
+                chartContainer.style.display = 'block';
+                
+                if (data.error) {
+                    modalProductName.textContent = "Error: " + data.error;
+                    return;
+                }
+
+                modalProductName.textContent = data.product_name;
+
+                const ctx = document.getElementById('priceChart').getContext('2d');
+                
+                // Destroy old chart if exists
+                if (myPriceChart) {
+                    myPriceChart.destroy();
+                }
+
+                // Create New Chart
+                myPriceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.dates,
+                        datasets: [{
+                            label: 'Price (₹)',
+                            data: data.prices,
+                            borderColor: '#0d6efd',
+                            backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#0d6efd',
+                            pointRadius: 4,
+                            fill: true,
+                            tension: 0.3 
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                grid: { color: '#e9ecef' }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Price: ₹' + context.parsed.y;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                chartLoading.innerHTML = '<p class="text-danger">Failed to load data.</p>';
+            });
+        });
+
+        // Init
+        document.addEventListener('DOMContentLoaded', function() {
+            setupThemeToggle();
+            // Bootstrap dropdowns are automatically initialized by bootstrap.bundle.min.js
+        });
+    </script>
+</style>
+{% endblock %}
