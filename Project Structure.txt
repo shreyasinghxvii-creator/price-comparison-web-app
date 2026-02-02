@@ -1,24 +1,3 @@
-├── app.py                 # Main Flask application
-├── requirements.txt       # Python dependencies
-├── .env.example          # Environment variables template
-├── scraper/              # Web scraping modules
-│   ├── base_scraper.py   # Base scraper class
-│   ├── amazon_scraper.py # Amazon-specific scraper
-│   ├── flipkart_scraper.py # Flipkart-specific scraper
-│   ├── croma_scraper.py  # Croma-specific scraper
-│   ├── snapdeal_scraper.py # Snapdeal-specific scraper
-│   └── scraper_manager.py # Multi-platform manager
-├── utils/                # Utility modules
-│   ├── currency_converter.py # Currency conversion
-│   └── product_matcher.py    # Product matching algorithms
-├── templates/            # HTML templates
-├── static/               # CSS, JS, images
-└── instance/             # Database files
-
-
-
-
-
 compario /
 ├── app.py
 ├── requirements.txt
@@ -62,4 +41,5 @@ compario /
 ├── ocr_processor.py
 ├── Project Structure.txt
 ├── README.md
-└── requirements.txt  
+└── requirements.txt 
+ 
