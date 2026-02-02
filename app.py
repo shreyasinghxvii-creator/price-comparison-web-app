@@ -48,6 +48,15 @@ def add_security_headers(response):
 # --- Database Setup ---
 db = SQLAlchemy(app)
 
+# --- Auto-create database tables (Gunicorn / Render safe) ---
+with app.app_context():
+    try:
+        db.create_all()
+        print("✅ Database tables ensured at startup.")
+    except Exception as e:
+        print(f"❌ Database init error: {e}")
+
+
 # --- Login Manager Setup ---
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -710,16 +719,7 @@ def forbidden_error(error):
     return render_template('base.html'), 403
 
 if __name__ == '__main__':
-    with app.app_context():
-        try:
-            db.create_all()
-            print("✅ Database tables checked/created successfully.")
-        except Exception as e:
-            print(f"❌ Error creating database tables: {e}")
-    
-    # Use environment variables for debug mode
-    debug_mode = os.environ.get('FLASK_DEBUG', 'true').lower() == 'true'
+    debug_mode = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
     port = int(os.environ.get('PORT', 5000))
-    
-    print(f"🚀 Starting Compario on port {port} (debug={debug_mode})")
     app.run(debug=debug_mode, port=port, host='0.0.0.0')
+
